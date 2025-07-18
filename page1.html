@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>กรอกงาน หศล-ส.</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f2f4f8;
+      margin: 0;
+      padding: 1rem;
+    }
+
+    h1 {
+      color: #004080;
+      text-align: center;
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 0.3rem;
+      font-size: 1rem;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 0.6rem;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    .btn {
+      padding: 1rem;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      width: 100%;
+      font-size: 1.1rem;
+      margin-top: 0.5rem;
+    }
+
+    .btn-submit {
+      background-color: #28a745; /* เขียว */
+    }
+
+    .btn-back {
+      background-color: #6c757d; /* เทา */
+    }
+
+    .success {
+      color: green;
+      text-align: center;
+      margin-top: 1rem;
+    }
+
+    .calendar-container {
+      margin-top: 2rem;
+    }
+
+    iframe {
+      width: 100%;
+      min-height: 600px;
+      border: none;
+      border-radius: 10px;
+    }
+
+    @media (max-width: 600px) {
+      iframe {
+        min-height: 500px;
+      }
+
+      label {
+        font-size: 0.95rem;
+      }
+
+      .btn {
+        font-size: 1rem;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <h1>กรอกงาน หศล-ส.</h1>
+
+  <div class="form-group">
+    <label>วันที่เริ่มทำงาน</label>
+    <input type="date" id="startDate">
+  </div>
+
+  <div class="form-group">
+    <label>เวลาเริ่ม</label>
+    <input type="time" id="startTime">
+  </div>
+
+  <div class="form-group">
+    <label>เวลาสิ้นสุด</label>
+    <input type="time" id="endTime">
+  </div>
+
+  <div class="form-group">
+    <label>รายละเอียด</label>
+    <input type="text" id="task">
+  </div>
+
+  <div class="form-group">
+    <label>PRIORITY</label>
+    <select id="priority">
+      <option>URGENT</option>
+      <option>HIGH</option>
+      <option>MED</option>
+      <option>LOW</option>
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label>วันสิ้นสุด</label>
+    <input type="date" id="dueDate">
+  </div>
+
+  <button class="btn btn-submit" onclick="submitForm()">บันทึก</button>
+  <button class="btn btn-back" onclick="goBack()">🔙 กลับหน้าเมนู</button>
+
+  <div class="success" id="successMsg" style="display:none;">✅ ส่งข้อมูลสำเร็จ</div>
+
+  <div class="calendar-container">
+    <h2 style="text-align:center; color:#004080;">📅 ปฏิทินงาน</h2>
+    <iframe src="https://calendar.google.com/calendar/embed?height=600&wkst=1&ctz=Asia%2FBangkok&mode=MONTH&showPrint=0&src=aHNyc2FsYXJtQGdtYWlsLmNvbQ&src=YzViYzIyOGYwMjQ2ZGFjN2JkOGQ2YmJhYzUyMWJiOGJjZTc5YTBhNGQ1ZmUzNjVkNmMwZGQ1MDFhYTY1ODQxZkBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=MWVjNmJjYTQyMjZiNDE2MDdhNzgwOWNkYmY5OGVlNmZiYTA0MjU3MTNkYjcyMjcyY2RlNjA0ZjdhMzIxNzFlOEBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=YWE4YmYzMjk5NDIxZjY5ZTBmYTg1Yjk0MDM2NmM0NmUwYTg4MTcyZDFmNmRkYmY1YzRmYzcyNWUxNjU4OTA3YUBncm91cC5jYWxlbmRhci5nb29nbGUuY29t&src=dGgudGgjaG9saWRheUBncm91cC52LmNhbGVuZGFyLmdvb2dsZS5jb20&color=%234285f4&color=%23f09300&color=%23d50000&color=%2351ff00&color=%2389d2f4" frameborder="0" scrolling="no"></iframe>
+  </div>
+
+  <script>
+    function formatDate(dateStr) {
+      const d = new Date(dateStr);
+      const day = ("0" + d.getDate()).slice(-2);
+      const month = ("0" + (d.getMonth() + 1)).slice(-2);
+      const year = d.getFullYear();
+      return `${day}/${month}/${year}`;
+    }
+
+    function submitForm() {
+      const dateEntered = formatDate(document.getElementById("startDate").value);
+      const startTime = document.getElementById("startTime").value + ":00";
+      const endTime = document.getElementById("endTime").value + ":00";
+      const task = document.getElementById("task").value;
+      const priority = document.getElementById("priority").value;
+      const dueDate = formatDate(document.getElementById("dueDate").value);
+
+      const data = {
+        dateEntered, startTime, endTime, task, priority, dueDate
+      };
+
+      fetch("https://script.google.com/macros/s/AKfycbzc5W0NHVmi4-tPxS9BEGgI_Xde_dwvkUOeNKRMSua7TebN32jMXb5hCUDE1zo9sNHLPQ/exec", {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: {
+          "Content-Type": "application/json"
+        }
+      })
+      .then(response => response.text())
+      .then(result => {
+        console.log("✅ Response:", result);
+        document.getElementById("successMsg").style.display = "block";
+      })
+      .catch(error => {
+        console.error("❌ Error:", error);
+        alert("ส่งข้อมูลไม่สำเร็จ กรุณาลองใหม่");
+      });
+    }
+
+    function goBack() {
+      window.location.href = "index.html";
+    }
+  </script>
+</body>
+
+</html>
